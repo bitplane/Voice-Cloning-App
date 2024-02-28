@@ -34,7 +34,7 @@ import numpy as np
 import torch.nn.functional as F
 from torch.autograd import Variable
 from scipy.signal import get_window
-from librosa.util import pad_center, tiny
+import librosa.util as lr import pad_center, tiny
 from librosa.filters import mel as librosa_mel_fn
 from training.tacotron2_model.audio_processing import (
     window_sumsquare,
@@ -66,7 +66,7 @@ class STFT(torch.nn.Module):
             assert filter_length >= win_length
             # get window and zero center pad it to filter_length
             fft_window = get_window(window, win_length, fftbins=True)
-            fft_window = pad_center(fft_window, size=filter_length)
+            fft_window = lr.pad_center(fft_window, size=filter_length)
             fft_window = torch.from_numpy(fft_window).float()
 
             # window the bases
@@ -122,7 +122,7 @@ class STFT(torch.nn.Module):
                 dtype=np.float32,
             )
             # remove modulation effects
-            approx_nonzero_indices = torch.from_numpy(np.where(window_sum > tiny(window_sum))[0])
+            approx_nonzero_indices = torch.from_numpy(np.where(window_sum > lr.tiny(window_sum))[0])
             window_sum = torch.autograd.Variable(torch.from_numpy(window_sum), requires_grad=False)
             window_sum = window_sum.cuda() if magnitude.is_cuda else window_sum
             inverse_transform[:, :, approx_nonzero_indices] /= window_sum[approx_nonzero_indices]
