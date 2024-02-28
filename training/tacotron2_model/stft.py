@@ -34,7 +34,7 @@ import numpy as np
 import torch.nn.functional as F
 from torch.autograd import Variable
 from scipy.signal import get_window
-import librosa.util as lr import pad_center, tiny
+import librosa.util as lr
 from librosa.filters import mel as librosa_mel_fn
 from training.tacotron2_model.audio_processing import (
     window_sumsquare,
